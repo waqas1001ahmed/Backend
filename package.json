@@ -9,12 +9,14 @@
     "node": ">=18.17"
   },
   "scripts": {
-    "dev": "node --watch src/index.js",
+    "dev-backend": "npm --prefix backend run dev",
+    "dev": "node --watch-path=src src/index.js",
     "start": "node src/index.js",
     "mongo:check": "node src/db/check-mongodb.js",
     "seed": "node src/db/seed.js"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
