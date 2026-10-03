@@ -1,5 +1,7 @@
 import path from 'node:path';
 import crypto from 'node:crypto';
+import fs from 'node:fs/promises';
+import { put } from '@vercel/blob';
 import multer from 'multer';
 import { config } from '../config.js';
 
@@ -10,17 +12,8 @@ const ALLOWED = new Map([
   ['image/svg+xml', '.svg'],
 ]);
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, config.uploadDir),
-  filename: (req, file, cb) => {
-    const ext = ALLOWED.get(file.mimetype) || path.extname(file.originalname) || '.bin';
-    const name = `img_${Date.now()}_${crypto.randomBytes(4).toString('hex')}${ext}`;
-    cb(null, name);
-  },
-});
-
 export const uploadImage = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: config.maxUploadBytes, files: 1 },
   fileFilter: (req, file, cb) => {
     if (!ALLOWED.has(file.mimetype)) {
@@ -30,3 +23,24 @@ export const uploadImage = multer({
     cb(null, true);
   },
 });
+
+export async function storeUploadedImage(file) {
+  const extension = ALLOWED.get(file.mimetype);
+  const filename = `img_${Date.now()}_${crypto.randomBytes(4).toString('hex')}${extension}`;
+
+  if (config.isVercel) {
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      throw new Error('BLOB_READ_WRITE_TOKEN is required to upload images on Vercel.');
+    }
+
+    const blob = await put(`logos/${filename}`, file.buffer, {
+      access: 'public',
+      contentType: file.mimetype,
+    });
+    return blob.url;
+  }
+
+  await fs.mkdir(config.uploadDir, { recursive: true });
+  await fs.writeFile(path.join(config.uploadDir, filename), file.buffer, { flag: 'wx' });
+  return `/uploads/${filename}`;
+}
