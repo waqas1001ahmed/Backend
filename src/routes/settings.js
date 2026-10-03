@@ -2,7 +2,7 @@ import express from 'express';
 import { authenticate, requirePermission } from '../middleware/auth.js';
 import { asyncHandler, ApiError } from '../utils/errors.js';
 import { recordAudit } from '../utils/audit.js';
-import { uploadImage } from '../middleware/upload.js';
+import { storeUploadedImage, uploadImage } from '../middleware/upload.js';
 import { getSettings, setSettings, DEFAULT_SETTINGS, SETTINGS_KEY_LABELS } from '../utils/settings.js';
 import { assert } from '../utils/validate.js';
 
@@ -101,7 +101,7 @@ router.post(
   uploadImage.single('logo'),
   asyncHandler(async (req, res) => {
     if (!req.file) throw ApiError.badRequest('No logo file was uploaded');
-    const url = `/uploads/${req.file.filename}`;
+    const url = await storeUploadedImage(req.file);
     const updated = await setSettings({ lab_logo: url }, req.user.id);
     await recordAudit({ req, action: 'update', module: 'settings', entity: 'settings', description: 'Uploaded laboratory logo' });
     res.json({ data: updated, logo_url: url });
