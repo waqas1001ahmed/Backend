@@ -42,6 +42,10 @@ export function createApp() {
   app.use(express.json({ limit: '2mb' }));
   app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
+  app.get('/', (req, res) => {
+    res.json({ status: 'ok', service: 'labms-api', health: '/api/health' });
+  });
+
   app.use('/uploads', express.static(config.uploadDir, { maxAge: '7d' }));
 
   app.use('/api', apiRoutes);
@@ -61,3 +65,7 @@ export function createApp() {
 
   return app;
 }
+
+const app = createApp();
+
+export default app;

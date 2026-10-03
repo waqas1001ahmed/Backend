@@ -1,6 +1,8 @@
-import { createApp } from './app.js';
+import app from './app.js';
 import { config } from './config.js';
 import { closeMongo, getMongoDatabase } from './db/mongodb.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 async function start() {
   try {
@@ -13,7 +15,6 @@ async function start() {
     return;
   }
 
-  const app = createApp();
   const server = app.listen(config.port, () => {
     console.log('');
     console.log('  Laboratory Management System - API');
@@ -37,7 +38,9 @@ async function start() {
   process.on('SIGTERM', () => shutdown('SIGTERM'));
 }
 
-start().catch((error) => {
-  console.error(`[startup] ${error.message}`);
-  process.exitCode = 1;
-});
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  start().catch((error) => {
+    console.error(`[startup] ${error.message}`);
+    process.exitCode = 1;
+  });
+}

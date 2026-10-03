@@ -1,5 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
+import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 
@@ -20,16 +21,20 @@ function resolveFromRoot(target) {
   return path.isAbsolute(target) ? target : path.resolve(ROOT_DIR, target);
 }
 
-const uploadDir = resolveFromRoot(process.env.UPLOAD_DIR || './uploads');
+const isVercel = process.env.VERCEL === '1' || Boolean(process.env.VERCEL_ENV);
+const uploadDir = isVercel
+  ? path.join(os.tmpdir(), 'uploads')
+  : resolveFromRoot(process.env.UPLOAD_DIR || './uploads');
 const staticDir = resolveFromRoot(process.env.STATIC_DIR);
 const mongoUri = process.env.MONGODB_URI || '';
 const mongoDatabase = process.env.MONGODB_DATABASE || 'MediCoreLIS';
 
-fs.mkdirSync(uploadDir, { recursive: true });
+if (!isVercel) fs.mkdirSync(uploadDir, { recursive: true });
 
 export const config = {
   env: process.env.NODE_ENV || 'development',
   isProduction: (process.env.NODE_ENV || 'development') === 'production',
+  isVercel,
   port: Number(process.env.PORT || 4000),
   uploadDir,
   staticDir,
