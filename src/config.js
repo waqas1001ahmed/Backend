@@ -21,7 +21,11 @@ function resolveFromRoot(target) {
   return path.isAbsolute(target) ? target : path.resolve(ROOT_DIR, target);
 }
 
+const environment = process.env.NODE_ENV || 'development';
 const isVercel = process.env.VERCEL === '1' || Boolean(process.env.VERCEL_ENV);
+const defaultCorsOrigins = environment === 'production'
+  ? ''
+  : 'http://localhost:5173,http://127.0.0.1:5173';
 const uploadDir = isVercel
   ? path.join(os.tmpdir(), 'uploads')
   : resolveFromRoot(process.env.UPLOAD_DIR || './uploads');
@@ -32,8 +36,8 @@ const mongoDatabase = process.env.MONGODB_DATABASE || 'MediCoreLIS';
 if (!isVercel) fs.mkdirSync(uploadDir, { recursive: true });
 
 export const config = {
-  env: process.env.NODE_ENV || 'development',
-  isProduction: (process.env.NODE_ENV || 'development') === 'production',
+  env: environment,
+  isProduction: environment === 'production',
   isVercel,
   port: Number(process.env.PORT || 4000),
   uploadDir,
@@ -49,7 +53,7 @@ export const config = {
     usedFallbackSecret: !process.env.JWT_SECRET,
   },
   bcryptRounds: Number(process.env.BCRYPT_ROUNDS || 10),
-  corsOrigins: (process.env.CORS_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173')
+  corsOrigins: (process.env.CORS_ORIGIN ?? defaultCorsOrigins)
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean),

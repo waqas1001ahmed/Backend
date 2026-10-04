@@ -32,9 +32,14 @@ export function createApp() {
         }
         // Allow any *.monkeycode-ai.live preview origin.
         if (/^https?:\/\/[a-z0-9-]+\.monkeycode-ai\.live$/i.test(origin)) return callback(null, true);
-        return callback(new Error(`Origin not allowed by CORS: ${origin}`));
+        const error = new Error(`Origin not allowed by CORS: ${origin}`);
+        error.statusCode = 403;
+        return callback(error);
       },
       credentials: true,
+      methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Accept', 'Authorization', 'Content-Type'],
+      optionsSuccessStatus: 204,
     }),
   );
 
