@@ -58,11 +58,16 @@ export const SETTINGS_KEY_LABELS = {
   receipt_title: 'Receipt title', receipt_header: 'Receipt header text', receipt_footer: 'Receipt footer text', receipt_show_logo: 'Show logo on receipts', receipt_width_mm: 'Receipt paper width (mm)', patient_prefix: 'Patient ID prefix', order_prefix: 'Order number prefix', report_prefix: 'Report number prefix', receipt_prefix: 'Receipt number prefix', currency_code: 'Currency code', currency_symbol: 'Currency symbol', currency_position: 'Currency symbol position', tax_percent: 'Default tax (%)', invoice_terms: 'Invoice terms', theme: 'Default theme', primary_color: 'Primary colour', accent_color: 'Accent colour', date_format: 'Date format', time_format: 'Time format', timezone_label: 'Timezone label',
 };
 
-export async function getSettings() {
+export async function getSettings(keys = null) {
   const { collections } = await appStore();
-  const rows = await collections.settings.find({}).toArray();
+  const selectedKeys = Array.isArray(keys) ? [...new Set(keys.filter((key) => key in DEFAULT_SETTINGS))] : null;
+  const filter = selectedKeys ? { key: { $in: selectedKeys } } : {};
+  const rows = await collections.settings.find(filter, { projection: { _id: 0, key: 1, value: 1 } }).toArray();
   const stored = Object.fromEntries(rows.map((row) => [row.key, decodeSettingValue(row.value)]));
-  return { ...DEFAULT_SETTINGS, ...stored };
+  const defaults = selectedKeys
+    ? Object.fromEntries(selectedKeys.map((key) => [key, DEFAULT_SETTINGS[key]]))
+    : DEFAULT_SETTINGS;
+  return { ...defaults, ...stored };
 }
 
 export async function getSetting(key) {
