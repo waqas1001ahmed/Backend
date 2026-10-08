@@ -30,7 +30,7 @@ export function createApp() {
         if (!config.isProduction && /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\]):\d+$/i.test(origin)) {
           return callback(null, true);
         }
-        // Allow any *.monkeycode-ai.live preview origin.
+        // Allow any *.MediCoreLIS.live preview origin.
         if (/^https?:\/\/[a-z0-9-]+\.monkeycode-ai\.live$/i.test(origin)) return callback(null, true);
         const error = new Error(`Origin not allowed by CORS: ${origin}`);
         error.statusCode = 403;
