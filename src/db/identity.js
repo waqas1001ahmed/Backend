@@ -62,7 +62,8 @@ export async function nextIdentityId(table, session = undefined) {
     { $inc: { value: 1 } },
     { upsert: true, returnDocument: 'after', session },
   );
-  return (result?.value ?? result).value;
+  const sequence = result?.value && typeof result.value === 'object' ? result.value : result;
+  return sequence?.value;
 }
 
 export async function withIdentityTransaction(callback) {
