@@ -10,9 +10,13 @@ export async function appStore() {
     const collections = Object.fromEntries(names.map((name) => [name, database.collection(name)]));
     const indexes = [
       [collections.patients, { full_name: 1 }], [collections.patients, { phone: 1 }],
+      [collections.patients, { is_deleted: 1, created_at: -1, id: -1 }, { name: 'patients_active_created_id' }],
       [collections.doctors, { name: 1 }], [collections.tests, { name: 1 }],
+      [collections.orders, { id: 1 }, { unique: true, name: 'orders_app_id_unique' }],
+      [collections.orders, { is_deleted: 1, created_at: -1, id: -1 }, { name: 'orders_active_created_id' }],
       [collections.orders, { patient_id: 1, created_at: -1 }], [collections.orders, { status: 1 }],
       [collections.order_items, { order_id: 1 }], [collections.reports, { order_id: 1, created_at: -1 }],
+      [collections.reports, { created_at: -1, id: -1 }, { name: 'reports_created_id' }],
       [collections.receipts, { order_id: 1 }], [collections.payments, { order_id: 1, paid_at: -1 }],
       [collections.settings, { key: 1 }, { unique: true }], [collections.sequences, { name: 1, period: 1 }, { unique: true }],
       [collections.audit_logs, { id: -1 }], [collections.audit_logs, { module: 1, created_at: -1 }],
@@ -37,7 +41,8 @@ export async function nextId(collectionName, session) {
     { $inc: { value: 1 } },
     { upsert: true, returnDocument: 'after', session },
   );
-  return Number((result?.value ?? result).value || 1);
+  const sequence = result?.value && typeof result.value === 'object' ? result.value : result;
+  return Number(sequence?.value || 1);
 }
 
 export async function transaction(callback) {
