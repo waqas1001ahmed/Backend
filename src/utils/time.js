@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Parses a stored `YYYY-MM-DD HH:MM:SS` timestamp.
  *
@@ -27,3 +28,9 @@ export function formatStoredDate(date = new Date()) {
 export function now(date = new Date()) {
   return formatStoredDate(date);
 }
+=======
+export function now(date = new Date()) {
+  const pad = (value) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+>>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772

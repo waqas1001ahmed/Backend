@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 export function formatDateTime(date = new Date()) { const pad = (n) => String(n).padStart(2, '0'); return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`; }
 export function periodKey(date = new Date()) { const pad = (n) => String(n).padStart(2, '0'); return `${String(date.getFullYear()).slice(2)}${pad(date.getMonth() + 1)}${pad(date.getDate())}`; }
+=======
+export function formatDateTime(date = new Date()) { const pad = (n) => String(n).padStart(2, '0'); return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`; }
+export function periodKey(date = new Date()) { const pad = (n) => String(n).padStart(2, '0'); return `${String(date.getFullYear()).slice(2)}${pad(date.getMonth() + 1)}${pad(date.getDate())}`; }
+>>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
