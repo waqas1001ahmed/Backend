@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-<<<<<<< HEAD
 import { randomUUID } from 'node:crypto';
 import { config } from '../config.js';
 import { getPublicUserById } from '../db/identity.js';
@@ -19,17 +18,6 @@ export function signToken(user, { expiresIn = config.jwt.expiresIn, sessionId = 
     { sub: user.id, username: user.username, role: user.role_name, jti: sessionId },
     config.jwt.secret,
     { expiresIn },
-=======
-import { config } from '../config.js';
-import { getPublicUserById } from '../db/identity.js';
-import { ApiError } from '../utils/errors.js';
-
-export function signToken(user) {
-  return jwt.sign(
-    { sub: user.id, username: user.username, role: user.role_name },
-    config.jwt.secret,
-    { expiresIn: config.jwt.expiresIn },
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
   );
 }
 
@@ -37,30 +25,20 @@ export function verifyToken(token) {
   return jwt.verify(token, config.jwt.secret);
 }
 
-<<<<<<< HEAD
 /** Extracts the bearer token from the Authorization header. */
 export function readBearerToken(req) {
   const header = req.headers.authorization || '';
   return header.startsWith('Bearer ') ? header.slice(7).trim() : null;
 }
 
-=======
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
 /** Loads a user together with role and flattened permission codes. */
 export async function loadUserById(id) {
   return getPublicUserById(id);
 }
 
-<<<<<<< HEAD
 /** Express middleware: requires a valid bearer token and an active session. */
 export async function authenticate(req, res, next) {
   const token = readBearerToken(req);
-=======
-/** Express middleware: requires a valid bearer token. */
-export async function authenticate(req, res, next) {
-  const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7).trim() : null;
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
   if (!token) return next(ApiError.unauthorized());
 
   let payload;
@@ -74,7 +52,6 @@ export async function authenticate(req, res, next) {
     const user = await loadUserById(payload.sub);
     if (!user) return next(ApiError.unauthorized('Account no longer exists'));
     if (!user.is_active) return next(ApiError.forbidden('Your account has been deactivated'));
-<<<<<<< HEAD
 
     // The session row decides whether this token is still valid.
     if (payload.jti) {
@@ -87,8 +64,6 @@ export async function authenticate(req, res, next) {
     }
 
     req.sessionId = payload.jti || null;
-=======
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
     req.user = user;
     return next();
   } catch (error) {

@@ -21,15 +21,7 @@ function resolveFromRoot(target) {
   return path.isAbsolute(target) ? target : path.resolve(ROOT_DIR, target);
 }
 
-<<<<<<< HEAD
 const isVercel = process.env.VERCEL === '1' || Boolean(process.env.VERCEL_ENV);
-=======
-const environment = process.env.NODE_ENV || 'development';
-const isVercel = process.env.VERCEL === '1' || Boolean(process.env.VERCEL_ENV);
-const defaultCorsOrigins = environment === 'production'
-  ? ''
-  : 'http://localhost:5173,http://127.0.0.1:5173';
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
 const uploadDir = isVercel
   ? path.join(os.tmpdir(), 'uploads')
   : resolveFromRoot(process.env.UPLOAD_DIR || './uploads');
@@ -40,13 +32,8 @@ const mongoDatabase = process.env.MONGODB_DATABASE || 'MediCoreLIS';
 if (!isVercel) fs.mkdirSync(uploadDir, { recursive: true });
 
 export const config = {
-<<<<<<< HEAD
   env: process.env.NODE_ENV || 'development',
   isProduction: (process.env.NODE_ENV || 'development') === 'production',
-=======
-  env: environment,
-  isProduction: environment === 'production',
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
   isVercel,
   port: Number(process.env.PORT || 4000),
   uploadDir,
@@ -59,7 +46,6 @@ export const config = {
   jwt: {
     secret: process.env.JWT_SECRET || 'insecure-development-secret-change-me',
     expiresIn: process.env.JWT_EXPIRES_IN || '12h',
-<<<<<<< HEAD
     rememberExpiresIn: process.env.JWT_REMEMBER_EXPIRES_IN || '30d',
     usedFallbackSecret: !process.env.JWT_SECRET,
   },
@@ -71,12 +57,6 @@ export const config = {
   },
   bcryptRounds: Number(process.env.BCRYPT_ROUNDS || 10),
   corsOrigins: (process.env.CORS_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173')
-=======
-    usedFallbackSecret: !process.env.JWT_SECRET,
-  },
-  bcryptRounds: Number(process.env.BCRYPT_ROUNDS || 10),
-  corsOrigins: (process.env.CORS_ORIGIN ?? defaultCorsOrigins)
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean),
@@ -87,7 +67,6 @@ export const config = {
   },
   trustProxy: bool(process.env.TRUST_PROXY, true),
 };
-<<<<<<< HEAD
 
 /**
  * Refuse to boot in production with the well-known development secret.
@@ -101,5 +80,3 @@ if (config.isProduction && config.jwt.usedFallbackSecret) {
     'JWT_SECRET must be set in production. Refusing to start with the development fallback secret.',
   );
 }
-=======
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772

@@ -16,11 +16,8 @@ export function errorHandler(err, req, res, next) {
   } else if (err.code === 'LIMIT_FILE_SIZE') {
     status = 413;
     message = 'Uploaded file is too large';
-<<<<<<< HEAD
   } else if (err.name === 'MulterError') {
     status = 400;
-=======
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
   }
 
   if (status >= 500) {

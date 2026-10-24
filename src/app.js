@@ -32,20 +32,9 @@ export function createApp() {
         }
         // Allow any *.MediCoreLIS.live preview origin.
         if (/^https?:\/\/[a-z0-9-]+\.monkeycode-ai\.live$/i.test(origin)) return callback(null, true);
-<<<<<<< HEAD
         return callback(new Error(`Origin not allowed by CORS: ${origin}`));
       },
       credentials: true,
-=======
-        const error = new Error(`Origin not allowed by CORS: ${origin}`);
-        error.statusCode = 403;
-        return callback(error);
-      },
-      credentials: true,
-      methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Accept', 'Authorization', 'Content-Type'],
-      optionsSuccessStatus: 204,
->>>>>>> 342fc312a402b959fb2916899ce63f18a9b70772
     }),
   );
 
