@@ -1,0 +1,21 @@
+
+  Laboratory Management System - API
+  Environment : development
+  Database    : MongoDB/MediCoreLIS
+  Listening   : http://localhost:4000
+  Health      : http://localhost:4000/api/health
+
+[0mGET /api/health [32m200[0m 9.228 ms - 71[0m
+[0mGET /api/health [32m200[0m 1.054 ms - 71[0m
+[0mPOST /api/auth/login [32m200[0m 3907.963 ms - 1375[0m
+[0mGET /api/reports?page=1&limit=20 [32m200[0m 3362.983 ms - 2680[0m
+[0mGET /api/reports?search=test&page=1&limit=20 [32m200[0m 647.413 ms - 60[0m
+[0mGET /api/reports?start_date=2020-01-01&end_date=2030-01-01&page=1&limit=20 [32m200[0m 1061.732 ms - 14387[0m
+[0mGET /api/health [32m200[0m 0.587 ms - 71[0m
+[0mPOST /api/auth/login [32m200[0m 994.016 ms - 1375[0m
+[0mGET /api/reports?start_date=2020-01-01&end_date=2030-01-01&page=1&limit=100 [32m200[0m 647.846 ms - 26111[0m
+[0mGET /api/reports?page=1&limit=20 [32m200[0m 600.162 ms - 2680[0m
+[0mGET /api/reports?search=RPT-261027-0002&page=1&limit=20 [32m200[0m 692.822 ms - 683[0m
+[0mGET /api/reports?search=zzznope&page=1&limit=20 [32m200[0m 629.150 ms - 60[0m
+[0mGET /api/reports?search=&page=1&limit=20 [32m200[0m 646.577 ms - 2680[0m
+[0mGET /api/reports?start_date=2020-01-01&end_date=2030-01-01&page=1&limit=20 [32m200[0m 642.493 ms - 14387[0m
